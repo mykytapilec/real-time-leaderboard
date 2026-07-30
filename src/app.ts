@@ -1,11 +1,18 @@
 import Fastify from 'fastify';
+import { leaderboardRoutes } from './routes/leaderboard.routes';
 
-export const app = Fastify({
-  logger: true,
-});
+export function buildApp() {
+  const app = Fastify({
+    logger: true,
+  });
 
-app.get('/health', async () => {
-  return {
-    status: 'ok',
-  };
-});
+  app.register(leaderboardRoutes);
+
+  app.get('/health', async () => {
+    return {
+      status: 'ok',
+    };
+  });
+
+  return app;
+}
