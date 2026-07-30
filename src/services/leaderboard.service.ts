@@ -1,4 +1,5 @@
 import { Player } from '../types/player';
+import { broadcast } from '../websocket/leaderboard.socket';
 
 export class LeaderboardService {
   private readonly players = new Map<string, Player>();
@@ -9,6 +10,7 @@ export class LeaderboardService {
     }
 
     this.players.set(player.id, player);
+    this.broadcastLeaderboard();
 
     return player;
   }
@@ -27,12 +29,17 @@ export class LeaderboardService {
     player.score = score;
 
     this.players.set(id, player);
+    this.broadcastLeaderboard();
 
     return player;
   }
 
   getLeaderboard(): Player[] {
     return [...this.players.values()].sort((a, b) => b.score - a.score);
+  }
+
+  private broadcastLeaderboard() {
+    broadcast('leaderboard:update', this.getLeaderboard());
   }
 }
 
