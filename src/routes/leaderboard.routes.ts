@@ -1,35 +1,28 @@
 import { FastifyInstance } from 'fastify';
-import { leaderboardService } from '../services/leaderboard.service';
+import {
+  getLeaderboard,
+  updatePlayerScore,
+} from '../services/leaderboard.service';
 
 export async function leaderboardRoutes(app: FastifyInstance) {
   app.post('/players', async (request, reply) => {
-    const player = leaderboardService.addPlayer(request.body as {
+    const player = request.body as {
       id: string;
       name: string;
       score: number;
-    });
+    };
 
-    return reply.code(201).send(player);
+    const result = updatePlayerScore(
+      player.id,
+      player.name,
+      player.score,
+    );
+
+    return reply.code(201).send(result);
   });
 
   app.get('/leaderboard', async () => {
-    return leaderboardService.getLeaderboard();
-  });
-
-  app.get('/players/:id', async (request, reply) => {
-    const { id } = request.params as {
-      id: string;
-    };
-
-    const player = leaderboardService.getPlayer(id);
-
-    if (!player) {
-      return reply.code(404).send({
-        message: 'Player not found',
-      });
-    }
-
-    return player;
+    return getLeaderboard();
   });
 
   app.patch('/players/:id/score', async (request, reply) => {
@@ -37,11 +30,12 @@ export async function leaderboardRoutes(app: FastifyInstance) {
       id: string;
     };
 
-    const { score } = request.body as {
+    const { name, score } = request.body as {
+      name: string;
       score: number;
     };
 
-    const player = leaderboardService.updateScore(id, score);
+    const player = updatePlayerScore(id, name, score);
 
     return reply.send(player);
   });
