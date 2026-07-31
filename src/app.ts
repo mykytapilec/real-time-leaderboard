@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
-import jwt from './plugins/jwt';
+import { authRoutes } from './auth/auth.routes';
+import jwtPlugin from './plugins/jwt';
 import { leaderboardRoutes } from './routes/leaderboard.routes';
 import { addClient } from './websocket/leaderboard.socket';
 
@@ -9,7 +10,7 @@ export function buildApp() {
     logger: true,
   });
 
-  app.register(jwt);
+  app.register(jwtPlugin);
 
   app.register(websocket);
 
@@ -17,6 +18,7 @@ export function buildApp() {
     addClient(socket);
   });
 
+  app.register(authRoutes);
   app.register(leaderboardRoutes);
 
   app.get('/health', async () => {
