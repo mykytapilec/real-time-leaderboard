@@ -47,5 +47,8 @@ export async function loginUser(input: LoginInput) {
     throw new Error('Invalid credentials');
   }
 
-  return user;
+  return {
+    id: user.id,
+    username: user.username,
+  };
 }
