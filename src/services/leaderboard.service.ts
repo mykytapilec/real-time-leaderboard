@@ -29,3 +29,23 @@ export function updatePlayerScore(
 export function getLeaderboard(): Player[] {
   return [...players.values()].sort((a, b) => b.score - a.score);
 }
+
+export function getPlayerRank(id: string) {
+  const leaderboard = getLeaderboard();
+
+  const playerIndex = leaderboard.findIndex(
+    (player) => player.id === id,
+  );
+
+  if (playerIndex === -1) {
+    return null;
+  }
+
+  const player = leaderboard[playerIndex];
+
+  return {
+    playerId: player.id,
+    rank: playerIndex + 1,
+    score: player.score,
+  };
+}
