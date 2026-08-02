@@ -1,3 +1,4 @@
+import { addScoreHistory } from '../reports/report.service';
 import { broadcast } from '../websocket/leaderboard.socket';
 
 export interface Player {
@@ -20,6 +21,8 @@ export function updatePlayerScore(
   };
 
   players.set(id, player);
+
+  addScoreHistory(player);
 
   broadcast('leaderboard.updated', getLeaderboard());
 

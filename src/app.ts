@@ -3,6 +3,7 @@ import websocket from '@fastify/websocket';
 import { authRoutes } from './auth/auth.routes';
 import jwtPlugin from './plugins/jwt';
 import { leaderboardRoutes } from './routes/leaderboard.routes';
+import { reportRoutes } from './reports/report.routes';
 import { addClient } from './websocket/leaderboard.socket';
 
 export function buildApp() {
@@ -20,6 +21,7 @@ export function buildApp() {
 
   app.register(authRoutes);
   app.register(leaderboardRoutes);
+  app.register(reportRoutes); 
 
   app.get('/health', async () => {
     return {
