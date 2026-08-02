@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { authenticate } from '../auth/auth.middleware';
 import {
   getLeaderboard,
+  getPlayerRank,
   updatePlayerScore,
 } from '../services/leaderboard.service';
 
@@ -26,6 +27,22 @@ export async function leaderboardRoutes(app: FastifyInstance) {
 
   app.get('/leaderboard', async () => {
     return getLeaderboard();
+  });
+
+  app.get('/players/:id/rank', async (request, reply) => {
+    const { id } = request.params as {
+        id: string;
+    };
+
+    const ranking = getPlayerRank(id);
+
+    if (!ranking) {
+        return reply.code(404).send({
+        message: 'Player not found',
+        });
+    }
+
+    return ranking;
   });
 
   app.patch(
