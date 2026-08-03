@@ -3,12 +3,18 @@ const prettierConfig = require('eslint-config-prettier');
 const importPlugin = require('eslint-plugin-import');
 
 module.exports = [
+  {
+    ignores: ['dist', 'node_modules'],
+  },
+
   js.configs.recommended,
   prettierConfig,
+
   {
     plugins: {
       import: importPlugin,
     },
+
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'commonjs',
@@ -17,6 +23,7 @@ module.exports = [
         process: 'readonly',
       },
     },
+
     rules: {
       'import/order': [
         'error',
